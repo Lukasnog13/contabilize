@@ -135,5 +135,51 @@
             <button class="facebook">Login com Facebook</button>
         </div>
     </div>
+
+    <!-- Modal de Erro -->
+   <div class="modal" id="errorModal">
+        <h3>Erro</h3>
+        <p id="errorMessage">Ocorreu um erro ao tentar se conectar ao banco de dados. Tente novamente mais tarde.</p>
+        <button onclick="closeModal()">Fechar</button>
+    </div> 
+
+    <script>
+        async function login() {
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ usuario, senha })
+                });
+
+                const data = await response.json(); // Captura a resposta JSON
+
+                if (response.ok) {
+                    // Redireciona para a próxima página
+                    window.location.href = "pagina2.html";
+                } else {
+                    // Exibe a mensagem de erro
+                    showErrorModal(data.message || 'Erro ao tentar fazer login.');
+                }
+            } catch (error) {
+                // Captura erros de rede ou de conexão
+                showErrorModal('Erro de conexão com o servidor. Tente novamente mais tarde.');
+            }
+        }
+
+        function showErrorModal(message) {
+            document.getElementById('errorMessage').innerText = message;
+            document.getElementById('errorModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('errorModal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
