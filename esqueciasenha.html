@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperação de Senha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0; /* Fundo cinza claro */
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .back-link {
+            margin-top: 15px;
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Recuperação de Senha</h1>
+        <form id="recoveryForm" onsubmit="sendRecoveryLink(event)">
+            <label for="email">Digite seu e-mail:</label>
+            <input type="email" id="email" placeholder="seuemail@exemplo.com" required>
+            <button type="submit">Enviar Link de Recuperação</button>
+        </form>
+        <div class="message">Um link para redefinir sua senha será enviado para o e-mail informado.</div>
+        <p id="displayEmail" class="message"></p> <!-- Parágrafo para exibir o e-mail -->
+        <a href="pagina.html" class="back-link">Voltar para Login</a>
+    </div>
+
+    <script>
+        // Exibe o e-mail armazenado na tela anterior
+        document.addEventListener("DOMContentLoaded", function() {
+            const email = localStorage.getItem('recoveryEmail');
+            if (email) {
+                document.getElementById('displayEmail').innerText = `E-mail informado: ${email}`;
+            }
+        });
+
+        function sendRecoveryLink(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+            // Aqui você pode adicionar a lógica para enviar o link de recuperação
+            // Redireciona para a página de confirmação
+            window.location.href = "emailenviado.html"; // Altere para o arquivo desejado
+        }
+    </script>
+</body>
+</html>

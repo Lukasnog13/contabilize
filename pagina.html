@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0; /* Fundo cinza claro */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        .login-container {
+            background-color: #fff; /* Bloco branco */
+            padding: 50px 40px;
+            border-radius: 12px; /* Borda arredondada */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
+            width: 350px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 30px;
+            font-weight: 700;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px; /* Borda arredondada */
+            font-size: 16px;
+            box-sizing: border-box; /* Garantir o tamanho exato */
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .checkbox-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .checkbox-container input {
+            margin-right: 10px;
+        }
+        .social-login {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .social-login button {
+            width: 48%; /* Tamanho igual para botões sociais */
+            background-color: #4285F4; /* Cor do Google */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            padding: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .social-login button.facebook {
+            background-color: #3b5998; /* Cor do Facebook */
+        }
+        .social-login button:hover {
+            opacity: 0.8;
+        }
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        /* Estilos do Modal de Alerta */
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none; /* Inicialmente oculto */
+            text-align: center;
+        }
+        .modal h3 {
+            margin-bottom: 15px;
+        }
+        .modal button {
+            margin-top: 10px;
+            background-color: #dc3545; /* Cor do botão de fechar */
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <input type="text" id="usuario" placeholder="Usuário" required>
+        <input type="password" id="senha" placeholder="Senha" required>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox"> Lembrar-me
+            </label>
+            <a href="esqueciasenha.html">Esqueci a senha</a>
+        </div>
+        <button type="submit" onclick="login()">Entrar</button>
+        <div class="social-login">
+            <button class="google">Login com Google</button>
+            <button class="facebook">Login com Facebook</button>
+        </div>
+    </div>
+
+    <!-- Modal de Erro -->
+    <div class="modal" id="errorModal">
+        <h3>Erro de Banco</h3>
+        <p id="errorMessage">Ocorreu um erro ao tentar se conectar ao banco de dados. Tente novamente mais tarde.</p>
+        <button onclick="closeModal()">Fechar</button>
+    </div>
+
+    <script>
+        async function login() {
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ usuario, senha })
+                });
+
+                const data = await response.json(); // Captura a resposta JSON
+
+                if (response.ok) {
+                    // Redireciona para a próxima página
+                    window.location.href = "pagina2.html";
+                } else {
+                    // Exibe a mensagem de erro
+                    showErrorModal(data.message || 'Erro ao tentar fazer login.');
+                }
+            } catch (error) {
+                // Captura erros de rede ou de conexão
+                showErrorModal('Erro de conexão com o servidor. Tente novamente mais tarde.');
+            }
+        }
+
+        function showErrorModal(message) {
+            document.getElementById('errorMessage').innerText = message;
+            document.getElementById('errorModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('errorModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

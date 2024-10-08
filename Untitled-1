@@ -1,0 +1,56 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class Login {
+    public static boolean verificarLogin(String usuario, String senha) {
+        String url = "jdbc:mysql://localhost:3306/seu_banco"; // Altere para o seu URL do banco de dados
+        String usuarioBD = "seu_usuario"; // Altere para o seu usuário do banco de dados
+        String senhaBD = "sua_senha"; // Altere para a sua senha do banco de dados
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Conecta ao banco de dados
+            conn = DriverManager.getConnection(url, usuarioBD, senhaBD);
+            
+            // Cria a consulta SQL
+            String sql = "SELECT * FROM usuario WHERE login = ? AND senha = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, usuario);
+            pstmt.setString(2, senha); // Lembre-se de usar hash para senhas!
+
+            // Executa a consulta
+            rs = pstmt.executeQuery();
+
+            // Retorna true se encontrar uma correspondência
+            return rs.next(); // Se houver um registro correspondente
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            // Fecha os recursos
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        // Teste a função
+        String usuario = "usuarioExemplo"; // Exemplo de usuário
+        String senha = "senhaExemplo"; // Exemplo de senha
+        if (verificarLogin(usuario, senha)) {
+            System.out.println("Login bem-sucedido!");
+        } else {
+            System.out.println("Usuário ou senha incorretos.");
+        }
+    }
+}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo de Folha de Pagamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 4px 2px -2px gray;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        nav {
+            background-color: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0px 4px 2px -2px gray;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #2196F3;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #2196F3;
+            padding-bottom: 10px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0b7dda;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0px -4px 2px -2px gray;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Folha de Pagamento - Empresa XYZ</h1>
+    </header>
+
+    <nav>
+        <a href="#home">Início</a>
+        <a href="#cadastro">Cadastrar Funcionário</a>
+        <a href="#calcular">Calcular Pagamento</a>
+        <a href="#relatorios">Relatórios</a>
+        <a href="#config">Configurações</a>
+    </nav>
+
+    <div class="container" id="home">
+        <h2>Bem-vindo ao Módulo de Folha de Pagamento</h2>
+        <p>Utilize o menu para navegar entre as opções de cadastro, cálculo de pagamento, geração de relatórios e configurações.</p>
+    </div>
+
+    <div class="container" id="cadastro">
+        <h2>Cadastrar Funcionário</h2>
+        <form>
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" placeholder="Digite o nome completo">
+
+            <label for="cargo">Cargo:</label>
+            <input type="text" id="cargo" name="cargo" placeholder="Digite o cargo do funcionário">
+
+            <label for="salario">Salário:</label>
+            <input type="number" id="salario" name="salario" placeholder="Digite o salário">
+
+            <label for="data_admissao">Data de Admissão:</label>
+            <input type="date" id="data_admissao" name="data_admissao">
+
+            <label for="departamento">Departamento:</label>
+            <select id="departamento" name="departamento">
+                <option value="administrativo">Administrativo</option>
+                <option value="financeiro">Financeiro</option>
+                <option value="recursos-humanos">Recursos Humanos</option>
+                <option value="tecnologia">Tecnologia</option>
+            </select>
+
+            <button type="submit" class="button">Cadastrar</button>
+        </form>
+    </div>
+
+    <div class="container" id="calcular">
+        <h2>Calcular Pagamento</h2>
+        <form>
+            <label for="funcionario">Funcionário:</label>
+            <select id="funcionario" name="funcionario">
+                <option value="func1">João da Silva</option>
+                <option value="func2">Maria Oliveira</option>
+                <option value="func3">Carlos Santos</option>
+            </select>
+
+            <label for="horas_trabalhadas">Horas Trabalhadas:</label>
+            <input type="number" id="horas_trabalhadas" name="horas_trabalhadas" placeholder="Digite as horas trabalhadas">
+
+            <label for="extras">Horas Extras:</label>
+            <input type="number" id="extras" name="extras" placeholder="Digite as horas extras">
+
+            <button type="submit" class="button">Calcular</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Funcionário</th>
+                    <th>Salário Base</th>
+                    <th>Horas Extras</th>
+                    <th>Total a Receber</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>João da Silva</td>
+                    <td>R$ 3.000,00</td>
+                    <td>R$ 300,00</td>
+                    <td>R$ 3.300,00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container" id="relatorios">
+        <h2>Relatórios de Pagamento</h2>
+        <form>
+            <label for="periodo">Período:</label>
+            <input type="month" id="periodo" name="periodo">
+
+            <button type="submit" class="button">Gerar Relatório</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Mês</th>
+                    <th>Funcionário</th>
+                    <th>Salário Base</th>
+                    <th>Total Recebido</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Agosto 2024</td>
+                    <td>Maria Oliveira</td>
+                    <td>R$ 4.500,00</td>
+                    <td>R$ 4.800,00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container" id="config">
+        <h2>Configurações</h2>
+        <form>
+            <label for="moeda">Moeda:</label>
+            <select id="moeda" name="moeda">
+                <option value="brl">Real (R$)</option>
+                <option value="usd">Dólar (US$)</option>
+            </select>
+
+            <label for="desconto_inss">Desconto INSS (%):</label>
+            <input type="number" id="desconto_inss" name="desconto_inss" placeholder="Digite a porcentagem de desconto">
+
+            <button type="submit" class="button">Salvar Configurações</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>Empresa XYZ - Sistema de Folha de Pagamento © 2024</p>
+    </footer>
+
+</body>
+</html>

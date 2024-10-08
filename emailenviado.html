@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperação de Senha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0; /* Fundo cinza claro */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        .message-container {
+            background-color: #fff; /* Bloco branco */
+            padding: 50px 40px;
+            border-radius: 12px; /* Borda arredondada */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
+            width: 350px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        p {
+            margin-bottom: 30px;
+            color: #555;
+            font-size: 16px;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <h2>Recuperação de Senha</h2>
+        <p>Link para criação de nova senha enviado para o email: <strong id="emailDisplay"></strong></p>
+        <a href="pagina.html">Voltar à tela de login</a> <!-- Redireciona para a página de login -->
+    </div>
+
+    <script>
+        const email = localStorage.getItem('recoveryEmail'); // Recupera o email do localStorage
+        document.getElementById('emailDisplay').innerText = email ? email : 'Email não fornecido, será configurado futuramente';
+    </script>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Contábil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #4B3D3D;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .username {
+            margin-right: 20px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: #4B3D3D;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 8px;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .module-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 30px auto;
+            max-width: 1200px;
+        }
+
+        .module-button {
+            background-color: white;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+
+        .module-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .module-button img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .modal, .development-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            width: 300px;
+            display: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 5px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        .development-message img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        /* Chat Icon and Chat Box Styles */
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007BFF;
+            border-radius: 50%;
+            color: white;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-icon:hover {
+            background-color: #0056b3;
+        }
+
+        .chat-box {
+            position: fixed;
+            bottom: 80px; /* Para ficar acima do ícone */
+            right: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none; /* Inicialmente oculto */
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .chat-box-header {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            text-align: center;
+        }
+
+        .chat-messages {
+            padding: 10px;
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 300px; /* Limitar a altura da área de mensagens */
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input input:focus {
+            border-color: #007BFF;
+        }
+
+        .chat-input button {
+            padding: 8px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .chat-input button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Sistema Contábil</h1>
+        <div class="user-info">
+            <span class="username">Usuário: João Silva</span>
+            <div class="dropdown">
+                <button class="dropbtn">Configurações</button>
+                <div class="dropdown-content">
+                    <a href="#">Perfil</a>
+                    <a href="#">Preferências</a>
+                    <a href="#">Sair</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Selecione um Módulo</h2>
+    <div class="module-container">
+        <div class="module-button" onclick="showModal()">
+            <img src="funcionario.png" alt="Ícone Funcionário">Funcionário
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()">
+            <img src="lancamento.png" alt="Icone Lançamentos">Lançamentos
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()">
+            <img src="contaspagar.png" alt="Icone Contas a Pagar">Contas a Pagar
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()"> 
+            <img src="contasreceber.png" alt="Icone Contas a Receber">Contas a Receber
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()">
+            <img src="relatorios.png" alt="Icone Relatórios">Relatórios
+        </div>
+        <div class="module-button" onclick="window.location.href='folha.html'"> 
+            <img src="folhapagamento.png" alt="Icone Folha">Folha de Pagamento
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()">
+            <img src="financeiro.png" alt="Icone Impostos">Gestão de Impostos
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()">
+            <img src="inventario.png" alt="Icone Inventário">Inventário
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()">
+            <img src="analise.png" alt="Icone Apuração">Apuração Fiscal
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()">
+            <img src="declaraimposto.png" alt="Icone Declaração">Declaração de Impostos
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()">
+            <img src="lista-de-controle.png" alt="Icone Controle">Controle de Atividades
+        </div>
+        <div class="module-button" onclick="showDevelopmentMessage()">
+            <img src="planejamento.png" alt="Icone Planejamento">Planejamento Tributário
+        </div>
+    </div>
+
+    <!-- Modal de cadastro de funcionário -->
+    <div class="overlay" id="modalOverlay"></div>
+    <div class="modal" id="employeeModal">
+        <h2>Cadastro de Funcionário</h2>
+        <form id="employeeForm">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+            <label for="position">Cargo:</label>
+            <input type="text" id="position" required>
+            <button type="submit">Cadastrar</button>
+            <button type="button" onclick="closeModal()">Fechar</button>
+        </form>
+    </div>
+
+    <!-- Mensagem de sistema em desenvolvimento -->
+    <div class="overlay" id="overlay"></div>
+    <div class="development-message" id="developmentMessage">
+        <img src="https://cdn-icons-png.flaticon.com/512/103/103085.png" alt="Alerta">
+        <p>Sistema em fase de desenvolvimento.<br>Essa funcionalidade estará disponível em breve.</p>
+        <button onclick="closeDevelopmentMessage()">Fechar</button>
+    </div>
+
+    <!-- Chat Icon -->
+    <div class="chat-icon" onmouseover="toggleChat(true)" onmouseout="startTimer()">
+        <img src="https://cdn-icons-png.flaticon.com/512/0/119.png" alt="Chat" style="width: 24px; height: 24px;">
+    </div>
+
+    <!-- Chat Box -->
+    <div class="chat-box" id="chatBox" onmouseover="toggleChat(true)" onmouseout="startTimer()">
+        <div class="chat-box-header">Chat</div>
+        <div class="chat-messages" id="chatMessages">
+            <p><strong>Assistente:</strong> Como posso ajudar?</p>
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Digite sua mensagem..." id="chatInput">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        let chatVisible = false;
+        let chatTimeout;
+
+        function showModal() {
+            document.getElementById('modalOverlay').style.display = 'block';
+            document.getElementById('employeeModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+            document.getElementById('employeeModal').style.display = 'none';
+        }
+
+        function showDevelopmentMessage() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('developmentMessage').style.display = 'block';
+        }
+
+        function closeDevelopmentMessage() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('developmentMessage').style.display = 'none';
+        }
+
+        function toggleChat(show) {
+            const chatBox = document.getElementById('chatBox');
+            chatBox.style.display = show ? 'flex' : 'none';
+            chatVisible = show;
+        }
+
+        function startTimer() {
+            if (!chatVisible) {
+                chatTimeout = setTimeout(() => {
+                    toggleChat(false);
+                }, 5000); // 5 segundos
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                const messages = document.getElementById('chatMessages');
+                messages.innerHTML += `<p><strong>Você:</strong> ${message}</p>`;
+                input.value = ''; // Limpa o campo de entrada
+                messages.scrollTop = messages.scrollHeight; // Rola para a última mensagem
+            }
+        }
+    </script>
+</body>
+</html>

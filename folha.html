@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Folha de Pagamento</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            transition: margin-left 0.3s;
+        }
+
+        .header {
+            background-color: #4B3D3D;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            white-space: nowrap; /* Impede quebra de linha */
+            overflow: hidden; /* Oculta conteúdo que não cabe */
+            text-overflow: ellipsis; /* Adiciona reticências para texto que não cabe */
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            white-space: nowrap; /* Impede quebra de linha */
+        }
+
+        .username {
+            margin-right: 20px;
+            max-width: 150px; /* Limita o tamanho do nome do usuário */
+            overflow: hidden; /* Oculta o texto que não cabe */
+            text-overflow: ellipsis; /* Adiciona reticências se o texto não couber */
+        }
+
+        .sidebar {
+            width: 50px;
+            background-color: #4B3D3D;
+            color: white;
+            padding-top: 60px;
+            position: fixed;
+            height: 100%;
+            transition: width 0.3s;
+            overflow: hidden;
+        }
+
+        .sidebar:hover {
+            width: 200px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .sidebar a:hover {
+            background-color: #3d2e2e;
+        }
+
+        .sidebar span {
+            margin-left: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar:hover span {
+            opacity: 1;
+        }
+
+        .submenu {
+            display: none;
+            flex-direction: column;
+            background-color: #3d2e2e;
+        }
+
+        .submenu a {
+            padding-left: 30px;
+        }
+
+        .has-submenu:hover .submenu {
+            display: flex;
+        }
+
+        .content {
+            margin-left: 50px;
+            margin-top: 80px;
+            padding: 20px;
+            flex-grow: 1;
+            transition: margin-left 0.3s;
+        }
+
+        h2 {
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            width: 700px;
+            display: none;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        input.error {
+            border-color: red;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex-grow: 1;
+            border-radius: 6px;
+            margin-right: 5px;
+        }
+
+        .tab-button:last-child {
+            margin-right: 0;
+        }
+
+        .tab-button.active {
+            background-color: #0056b3;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .two-columns {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column {
+            width: 48%;
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .development-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            width: 300px;
+            text-align: center;
+        }
+
+        .development-message img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .modal {
+                width: 90%;
+            }
+
+            .sidebar {
+                width: 60px;
+            }
+
+            .sidebar:hover {
+                width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sistema de Folha de Pagamento</h1>
+        <div class="user-info">
+            <span class="username">Usuário: Maria Oliveira</span>
+            <span class="notification-icon">🔔</span>
+            <span class="profile-icon">👤</span>
+        </div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        <a href="#" onclick="showModal()">
+            <span class="menu-icon">👤</span>
+            <span class="menu-text">Funcionários</span>
+        </a>
+        <a href="#" onclick="showModal()">
+            <span class="menu-icon">💰</span>
+            <span class="menu-text">Folha</span>
+        </a>
+        <a href="#" class="has-submenu" onclick="showModal()">
+            <span class="menu-icon">📊</span>
+            <span class="menu-text">Relatórios</span>
+            <div class="submenu">
+                <a href="#" onclick="showModal()">Relatórios Mensais</a>
+                <a href="#" onclick="showModal()">Relatórios Anuais</a>
+                <a href="#" onclick="showModal()">Relatórios de Desempenho</a>
+            </div>
+        </a>
+        <a href="#" class="has-submenu" onclick="showModal()">
+            <span class="menu-icon">🏖️</span>
+            <span class="menu-text">Férias</span>
+            <div class="submenu">
+                <a href="#" onclick="showModal()">Solicitar Férias</a>
+                <a href="#" onclick="showModal()">Gerenciar Férias</a>
+            </div>
+        </a>
+        <a href="#" onclick="showModal()">
+            <span class="menu-icon">📜</span>
+            <span class="menu-text">Documentos</span>
+        </a>
+        <a href="#" class="has-submenu" onclick="showModal()">
+            <span class="menu-icon">💼</span>
+            <span class="menu-text">Suporte</span>
+            <div class="submenu">
+                <a href="#" onclick="showModal()">Contato</a>
+                <a href="#" onclick="showModal()">FAQ</a>
+            </div>
+        </a>
+        <a href="#" class="has-submenu" onclick="showModal()">
+            <span class="menu-icon">📈</span>
+            <span class="menu-text">Análises</span>
+            <div class="submenu">
+                <a href="#" onclick="showModal()">Análise de Desempenho</a>
+                <a href="#" onclick="showModal()">Análise de Custo</a>
+                <a href="#" onclick="showModal()">Relatórios Estatísticos</a>
+            </div>
+        </a>
+        <a href="#" class="has-submenu" onclick="showModal()">
+            <span class="menu-icon">🛠️</span>
+            <span class="menu-text">Ferramentas</span>
+            <div class="submenu">
+                <a href="#" onclick="showModal()">Calculadora de Salário</a>
+                <a href="#" onclick="showModal()">Agendar Tarefas</a>
+            </div>
+        </a>
+    </div>
+
+    <div class="content">
+        <h2>Bem-vindo ao Sistema de Folha de Pagamento</h2>
+        <!-- Conteúdo principal aqui -->
+    </div>
+
+    <div class="modal" id="employeeModal">
+        <form id="employeeForm">
+            <div class="tabs">
+                <button type="button" class="tab-button active" onclick="openTab(event, 'basicInfo')">Informações Básicas</button>
+                <button type="button" class="tab-button" onclick="openTab(event, 'addressInfo')">Endereço</button>
+                <button type="button" class="tab-button" onclick="openTab(event, 'jobInfo')">Trabalho</button>
+                <button type="button" class="tab-button" onclick="openTab(event, 'contactInfo')">Contato de Emergência</button>
+            </div>
+            <div id="basicInfo" class="tab-content active">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" required>
+                <label for="birthdate">Data de Nascimento:</label>
+                <input type="date" id="birthdate" required>
+                <label for="gender">Gênero:</label>
+                <select id="gender" required>
+                    <option value="">Selecione</option>
+                    <option value="male">Masculino</option>
+                    <option value="female">Feminino</option>
+                    <option value="other">Outro</option>
+                </select>
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" required>
+                <label for="phone">Telefone:</label>
+                <input type="tel" id="phone" required>
+            </div>
+            <div id="addressInfo" class="tab-content">
+                <div class="two-columns">
+                    <div class="column">
+                        <label for="street">Rua:</label>
+                        <input type="text" id="street" required>
+                    </div>
+                    <div class="column">
+                        <label for="number">Número:</label>
+                        <input type="text" id="number" required>
+                    </div>
+                </div>
+                <div class="two-columns">
+                    <div class="column">
+                        <label for="city">Cidade:</label>
+                        <input type="text" id="city" required>
+                    </div>
+                    <div class="column">
+                        <label for="state">Estado:</label>
+                        <input type="text" id="state" required>
+                    </div>
+                </div>
+                <div class="two-columns">
+                    <div class="column">
+                        <label for="country">País:</label>
+                        <input type="text" id="country" required>
+                    </div>
+                    <div class="column">
+                        <label for="zip">CEP:</label>
+                        <input type="text" id="zip" required>
+                    </div>
+                </div>
+            </div>
+            <div id="jobInfo" class="tab-content">
+                <label for="position">Cargo:</label>
+                <input type="text" id="position" required>
+                <label for="salary">Salário:</label>
+                <input type="number" id="salary" required>
+                <label for="startDate">Data de Início:</label>
+                <input type="date" id="startDate" required>
+            </div>
+            <div id="contactInfo" class="tab-content">
+                <label for="emergencyContactName">Nome do Contato de Emergência:</label>
+                <input type="text" id="emergencyContactName" required>
+                <label for="emergencyContactPhone">Telefone do Contato de Emergência:</label>
+                <input type="tel" id="emergencyContactPhone" required>
+                <label for="relationship">Relação:</label>
+                <input type="text" id="relationship" required>
+            </div>
+            <div class="footer-buttons">
+                <button type="submit">Cadastrar</button>
+                <button type="button" onclick="clearForm()">Limpar</button>
+                <button type="button" onclick="closeModal()">Fechar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="development-message" id="developmentMessage">
+        <img src="https://cdn-icons-png.flaticon.com/512/103/103085.png" alt="Alerta">
+        <p>Sistema em fase de desenvolvimento!</p>
+        <button onclick="closeDevelopmentMessage()">Fechar</button>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        function showModal() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('employeeModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('employeeModal').style.display = 'none';
+        }
+
+        function openTab(evt, tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function clearForm() {
+            document.getElementById('employeeForm').reset();
+        }
+
+        function showDevelopmentMessage() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('developmentMessage').style.display = 'block';
+        }
+
+        function closeDevelopmentMessage() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('developmentMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
